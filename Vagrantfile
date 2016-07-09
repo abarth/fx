@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install -y git-all golang qemu texinfo libglib2.0-dev autoconf libtool libsdl-dev build-essential lzip curl
+    apt-get install -y git-all golang qemu texinfo libglib2.0-dev autoconf libtool libsdl-dev build-essential lzip curl vim-nox
   SHELL
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
@@ -75,7 +75,7 @@ Vagrant.configure("2") do |config|
     cd /vagrant/src
     git clone https://github.com/travisg/toolchains.git
     cd toolchains
-    ./doit -a 'arm aarch64 x86_64' -f -j32
+    ./doit -a 'arm i686 aarch64 x86_64' -f -j32
 
     cd /vagrant/src
     curl -s https://raw.githubusercontent.com/vanadium/go.jiri/master/scripts/bootstrap_jiri | bash -s fuchsia
