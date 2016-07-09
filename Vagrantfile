@@ -82,5 +82,10 @@ Vagrant.configure("2") do |config|
     cd fuchsia
     .jiri_root/scripts/jiri import fuchsia https://fuchsia.googlesource.com/manifest
     .jiri_root/scripts/jiri update
+
+    mkdir sdk
+    cd sdk
+    curl https://storage.googleapis.com/mojo-build/fuchsia/fuchsia-sdk.tar.lz -O
+    tar xvf fuchsia-sdk.tar.lz
   SHELL
 end
