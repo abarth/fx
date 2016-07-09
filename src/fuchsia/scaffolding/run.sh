@@ -14,10 +14,10 @@ OUT=$HOME/tmp/out
 BOOTFS=$OUT/bootfs
 
 rm -rf $BOOTFS
-mkdir -p $BOOTFS
+mkdir -p $BOOTFS/bin
 
 cd $FUCHSIA_ROOT/fortune
-$CC $CFLAGS fortune.c -o $BOOTFS/fortune
+$CC $CFLAGS fortune.c -o $BOOTFS/bin/fortune
 
 cd $FUCHSIA_ROOT/third_party/gtest/googletest
 $CXX $CFLAGS -I. -isystem include -g -Wall -Wextra -pthread \
@@ -25,7 +25,7 @@ $CXX $CFLAGS -I. -isystem include -g -Wall -Wextra -pthread \
     src/gtest_main.cc \
     samples/sample1.cc \
     samples/sample1_unittest.cc \
-    -o $BOOTFS/sample1_unittest
+    -o $BOOTFS/bin/t
 
 MAGENTA_ROOT=$FUCHSIA_ROOT/magenta
 MKBOOTFS=$MAGENTA_ROOT/build-magenta-qemu-x86-64/tools/mkbootfs
