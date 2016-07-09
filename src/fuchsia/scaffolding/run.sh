@@ -3,12 +3,14 @@
 set -ex
 
 FUCHSIA_ROOT=/vagrant/src/fuchsia
+TARGET_PLATFORM=x86_64-fuchsia
 SDK=$FUCHSIA_ROOT/sdk
+SYSROOT=$SDK/platforms/$TARGET_PLATFORM
+# SYSROOT=$FUCHSIA_ROOT/magenta/build-magenta-qemu-x86-64/sysroot
 
 CC=$SDK/toolchains/clang+llvm-x86_64-linux/bin/clang
 CXX=$SDK/toolchains/clang+llvm-x86_64-linux/bin/clang++
-TARGET_PLATFORM=x86_64-fuchsia
-CFLAGS="--target=$TARGET_PLATFORM -static --sysroot=$SDK/platforms/$TARGET_PLATFORM"
+CFLAGS="--target=$TARGET_PLATFORM -static --sysroot=$SYSROOT"
 
 OUT=$HOME/tmp/out
 BOOTFS=$OUT/bootfs
@@ -20,7 +22,7 @@ cd $FUCHSIA_ROOT/fortune
 $CC $CFLAGS fortune.c -o $BOOTFS/bin/fortune
 
 cd $FUCHSIA_ROOT/third_party/gtest/googletest
-$CXX $CFLAGS -I. -isystem include -g -Wall -Wextra -pthread \
+$CXX $CFLAGS -I. -isystem include -g -Wall -Wextra -pthread --std=c++11 \
     src/gtest-all.cc \
     src/gtest_main.cc \
     samples/sample1.cc \
