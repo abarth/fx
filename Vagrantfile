@@ -48,8 +48,7 @@ Vagrant.configure("2") do |config|
     # vb.gui = true
 
     # Customize the amount of memory on the VM:
-    vb.memory = "6144"
-    vb.cpus = 4
+    vb.memory = "4096"
   end
   #
   # View the documentation for the provider you are using for more
@@ -67,7 +66,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install -y git-all golang qemu texinfo libglib2.0-dev autoconf libtool libsdl-dev build-essential lzip
+    apt-get install -y git-all golang qemu texinfo libglib2.0-dev autoconf libtool libsdl-dev build-essential lzip curl
   SHELL
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
@@ -81,7 +80,7 @@ Vagrant.configure("2") do |config|
     cd /vagrant/src
     curl -s https://raw.githubusercontent.com/vanadium/go.jiri/master/scripts/bootstrap_jiri | bash -s fuchsia
     cd fuchsia
-    .jiri_root/scripts/jiri import fuchsia https://fuchsia.googlesource.com/manifest)
+    .jiri_root/scripts/jiri import fuchsia https://fuchsia.googlesource.com/manifest
     .jiri_root/scripts/jiri update
   SHELL
 end
