@@ -55,6 +55,12 @@ $CC $CFLAGS -I.. -g -Wall -Wextra --std=c11 \
     -c system/mojo.c -o $OBJ/mojo.o
 rm -f $OUT/libmojo.a && $AR $ARFLAGS $OUT/libmojo.a $OBJ/mojo.o
 
+$CXX $CFLAGS -I.. -g -Wall -Wextra --std=c++11 \
+    -L$OUT -lmojo  \
+    shell/shell.cc \
+    shell/spawn.cc \
+    -o $BOOTFS/bin/mojo_shell
+
 MAGENTA_ROOT=$FUCHSIA_ROOT/magenta
 MKBOOTFS=$MAGENTA_ROOT/build-magenta-qemu-x86-64/tools/mkbootfs
 RUN_MAGENTA=$MAGENTA_ROOT/scripts/run-magenta-x86-64
