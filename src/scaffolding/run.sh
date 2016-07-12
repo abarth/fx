@@ -4,14 +4,14 @@ set -ex
 
 FUCHSIA_ROOT=/vagrant/src/fuchsia
 TARGET_PLATFORM=x86_64-fuchsia
-SDK=$FUCHSIA_ROOT/sdk
+SDK=$FUCHSIA_ROOT/buildtools/sdk
 SYSROOT=$SDK/platforms/$TARGET_PLATFORM
 # SYSROOT=$FUCHSIA_ROOT/magenta/build-magenta-qemu-x86-64/sysroot
 
 AR=$SDK/toolchains/clang+llvm-x86_64-linux/bin/llvm-ar
 CC=$SDK/toolchains/clang+llvm-x86_64-linux/bin/clang
 CXX=$SDK/toolchains/clang+llvm-x86_64-linux/bin/clang++
-CFLAGS="--target=$TARGET_PLATFORM -static --sysroot=$SYSROOT"
+CFLAGS="--target=$TARGET_PLATFORM -static --sysroot=$SYSROOT -D_BSD_SOURCE"
 ARFLAGS=cr
 
 OUT=$HOME/tmp/out
@@ -48,6 +48,12 @@ $CXX $CFLAGS -I. -I$GTEST_INCLUDE -g -Wall -Wextra -pthread --std=c++11 \
     ftl/arraysize_unittest.cc \
     ftl/logging.cc \
     -o $BOOTFS/bin/ftl_unittests
+
+cd $FUCHSIA_ROOT/mojo
+
+$CC $CFLAGS -I.. -g -Wall -Wextra --std=c11 \
+    -c system/mojo.c -o $OBJ/mojo.o
+rm -f $OUT/libmojo.a && $AR $ARFLAGS $OUT/libmojo.a $OBJ/mojo.o
 
 MAGENTA_ROOT=$FUCHSIA_ROOT/magenta
 MKBOOTFS=$MAGENTA_ROOT/build-magenta-qemu-x86-64/tools/mkbootfs
