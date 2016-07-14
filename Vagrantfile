@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -66,18 +66,23 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install -y git-all golang qemu texinfo libglib2.0-dev autoconf libtool libsdl-dev build-essential lzip curl vim-nox
+    apt-get install -y git-all golang qemu texinfo libglib2.0-dev autoconf \
+        libtool libsdl-dev build-essential curl vim-nox nfs-kernel-server
+    mkdir -p /export/src
+    chmod 777 /export
+    chmod 777 /export/src
+    echo "/export       192.168.1.0/16(rw,fsid=0,insecure,no_subtree_check,async)" >> /etc/exports
+    echo "/export/src   192.168.1.0/16(rw,all_squash,anonuid=900,nohide,insecure,no_subtree_check,async)" >> /etc/exports
+    service nfs-kernel-server restart
   SHELL
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
-    mkdir -p /vagrant/src
+    # cd /vagrant/src
+    # git clone https://github.com/travisg/toolchains.git
+    # cd toolchains
+    # ./doit -a 'arm i686 aarch64 x86_64' -f -j32
 
-    cd /vagrant/src
-    git clone https://github.com/travisg/toolchains.git
-    cd toolchains
-    ./doit -a 'arm i686 aarch64 x86_64' -f -j32
-
-    cd /vagrant/src
+    cd /export/src
     curl -s https://raw.githubusercontent.com/vanadium/go.jiri/master/scripts/bootstrap_jiri | bash -s fuchsia
     cd fuchsia
     .jiri_root/scripts/jiri import fuchsia https://fuchsia.googlesource.com/manifest
